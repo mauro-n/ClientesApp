@@ -37,6 +37,12 @@ class AuthController extends Controller
 
     public function whoami(Request $request): JsonResponse
     {
+        if (config('app.env') == 'local') {
+            $user = User::where('id', 1)->first();
+            if (empty($user)) return response()->json(null, 404);
+            return response()->json($user, 200);
+        }
+        
         $me = $request->session()->get('user');
         if (empty($me)) return response()->json(null, 401);
         return response()->json($me, 200);
