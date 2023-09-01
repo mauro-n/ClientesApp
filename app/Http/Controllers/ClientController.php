@@ -13,8 +13,8 @@ class ClientController extends Controller
     {
         /* Make sure always return array */
         $user = $request->session()->get('user');
-        //if (empty($user)) return response()->json(null, 401);
-        $clients = Client::where('user_id', 1)->get();
+        if (empty($user)) return response()->json(null, 401);
+        $clients = Client::where('user_id', $user->id)->get();
         if (count($clients) > 0) return response()->json($clients);
         return response()->json([]);
     }
@@ -22,10 +22,10 @@ class ClientController extends Controller
     public function getClient(Request $request, $id): JsonResponse
     {
         $user = $request->session()->get('user');
-        //if (empty($user)) return response()->json(null, 401);
+        if (empty($user)) return response()->json(null, 401);
 
-        //$client = Client::where('id', $id)->where('user_id', $user->id)->first();
-        $client = Client::find($id);
+        $client = Client::where('id', $id)->where('user_id', $user->id)->first();
+        //$client = Client::find($id);
         if (empty($client)) return response()->json(null, 404);
 
         $transactions = $client->transactions;
@@ -86,7 +86,7 @@ class ClientController extends Controller
 
         $client = Client::find($id);
         if (empty($client)) return response()->json(null, 404);
-        if ($client['user_id'] !== $user->id) return response()->json(null, 401);
+        if ($client['user_id'] !== $user->id) return response()->json(null, 403);
         if ($client->delete()) return response()->json(null, 200);
     }
 }

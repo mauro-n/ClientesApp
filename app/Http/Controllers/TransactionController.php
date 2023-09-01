@@ -27,7 +27,7 @@ class TransactionController extends Controller
     public function store(Request $request): JsonResponse
     {
         $user = $request->session()->get('user');
-        //if (empty($user)) return response()->json(null, 401);
+        if (empty($user)) return response()->json(null, 401);
 
         $validator = Validator::make($request->all(), [
             'item' => 'required',
@@ -40,12 +40,12 @@ class TransactionController extends Controller
         }
 
         //for tests only
-        $userId = '1';
-        $client = Client::where('id', $request->input('client_id'))
-            ->where('user_id', $userId)->first();
+        //$userId = '1';
+        //$client = Client::where('id', $request->input('client_id'))
+        //->where('user_id', $userId)->first();
 
-        /* $client = Client::where('id', $request->input('client_id'))
-            ->where('user_id', $user->id)->first(); */
+        $client = Client::where('id', $request->input('client_id'))
+            ->where('user_id', $user->id)->first();
 
         if (empty($client)) return response()->json('Client not found', 404);
 
@@ -56,8 +56,8 @@ class TransactionController extends Controller
         $transaction['item'] = $request->input('item');
         $transaction['value'] = $request->input('value');
         $transaction['paid'] = $paid;
-        //$transaction['user_id'] = $user->id;
-        $transaction['user_id'] = $userId;
+        $transaction['user_id'] = $user->id;
+        //$transaction['user_id'] = $userId;
         $transaction['client_id'] = $client->id;
 
         if ($transaction->save()) {

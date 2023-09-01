@@ -10,6 +10,8 @@ class UserController extends Controller
 {
     public function index(): JsonResponse
     {
+        // Falta implementar administrador
+        return response()->json(null, 403);
         $users = User::all();
         if (count($users) > 0) return response()->json($users);
         return response()->json([]);
