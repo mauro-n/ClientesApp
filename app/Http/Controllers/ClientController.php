@@ -113,10 +113,10 @@ class ClientController extends Controller
     public function destroy(Request $request, $id): JsonResponse
     {
         if (config('app.env') == 'local') {
-            $client = Client::find($id);
+            $client = Client::where('id', $id)->where('user_id', 1)->first();
             if (empty($client)) return response()->json(null, 404);
-            if ($client['user_id'] !== 1) return response()->json(null, 403);
             if ($client->delete()) return response()->json(null, 200);
+            return response()->json(null, 500);
         }
 
         $user = $request->session()->get('user');
