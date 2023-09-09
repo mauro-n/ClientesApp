@@ -39,7 +39,8 @@ class TransactionController extends Controller
             $validator = Validator::make($request->all(), [
                 'item' => 'required',
                 'value' => 'required',
-                'client_id' => 'required'
+                'client_id' => 'required',
+                'date' => ['required', 'date']
             ]);
             if ($validator->fails()) {
                 return response()->json($validator->messages()->get('*'), 400);
@@ -63,17 +64,22 @@ class TransactionController extends Controller
             $transaction['paid'] = $paid;
             $transaction['user_id'] = $userId;
             $transaction['client_id'] = $client->id;
+            $transaction['date'] = $request->input('date');
             if ($transaction->save()) return response()->json('Salvo', 200);
             return response()->json(null, 500);
         }
 
         $user = $request->session()->get('user');
+
         if (empty($user)) return response()->json(null, 401);
+
         $validator = Validator::make($request->all(), [
             'item' => 'required',
             'value' => 'required',
-            'client_id' => 'required'
+            'client_id' => 'required',
+            'date' => ['required', 'date']
         ]);
+
         if ($validator->fails()) {
             return response()->json($validator->messages()->get('*'), 400);
         }
@@ -92,6 +98,7 @@ class TransactionController extends Controller
         $transaction['paid'] = $paid;
         $transaction['user_id'] = $user->id;
         $transaction['client_id'] = $client->id;
+        $transaction['date'] = $request->input('date');
 
         if ($transaction->save()) {
             return response()->json('Salvo', 200);

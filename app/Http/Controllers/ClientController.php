@@ -80,14 +80,18 @@ class ClientController extends Controller
                 'name' => ['required', 'max:100'],
                 'address' => ['max:250'],
                 'age' => ['max:3'],
-                'sex' => ['max:15'],
+                'sex' => ['max:15'],                
             ],
-            ['required' => ':attribute não pode ser nulo'],
+            [
+                'required' => ':attribute não pode ser nulo',
+                'date' => 'Data inválida'
+            ],
             [
                 'name' => 'Nome',
-                'address', 'Endereço',
-                'age', 'Idade',
-                'sex', 'Genêro'
+                'address' => 'Endereço',
+                'age' => 'Idade',
+                'sex' => 'Gênero',
+                'date' => 'Data'
             ]
         );
 
